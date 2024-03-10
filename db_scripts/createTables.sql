@@ -61,3 +61,5 @@ INSERT INTO votesSeries VALUES (7, 'zackdev97', 7, 9.0);
 INSERT INTO votesSeries VALUES (8, 'zackdev97', 8, 9.4);
 INSERT INTO votesSeries VALUES (9, 'zackdev97', 9, 9.5);
 INSERT INTO votesSeries VALUES (10, 'zackdev97', 10, 8.7);
+ALTER TABLE commentairesFilms ADD CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES votesFilms(id);
+ALTER TABLE commentairesSeries ADD CONSTRAINT fk_sid FOREIGN KEY (id) REFERENCES votesSeries(id);
