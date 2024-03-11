@@ -31,9 +31,87 @@ SELECT S.*, V.nomUtilisateur, V.note  FROM series S, votesSeries V WHERE S.nomSe
 END //
 DELIMITER ;
 --procédure permettant de créer des films :
+DELIMITER //
+CREATE PROCEDURE creerFilm (IN nomFilm varchar(100), IN annee YEAR, IN nomGenre varchar(50), IN nomSousGenre varchar(50), IN acteurs longtext)
+BEGIN
+DECLARE idActuel int;
+SELECT max(idFilm) FROM films INTO idActuel;
+INSERT INTO films VALUES (idActuel + 1, nomFilm, annee, nomGenre, nomSousGenre, acteurs, 0, 0.0, 0.0);
+END //
+DELIMITER ;
 --procédure permettant de créer des séries :
+DELIMITER //
+CREATE PROCEDURE creerSerie (IN nomSerie varchar(100), IN annee YEAR, IN nomGenre varchar(50), IN nomSousGenre varchar(50), IN acteurs longtext, IN saison integer)
+BEGIN
+DECLARE idActuel int;
+SELECT max(idSerie) FROM series INTO idActuel;
+INSERT INTO series VALUES (idActuel + 1, nomSerie, annee, nomGenre, nomSousGenre, acteurs, 0, 0.0, 0.0, saison);
+END //
+DELIMITER ;
 --procédure permettant de créer des utilisateurs :
+DELIMITER //
+CREATE PROCEDURE creerUtilisateur (IN nomUtilisateur varchar(50), IN motDePasse varchar(50), IN roleUtilisateur enum('admin', 'user'))
+BEGIN
+INSERT INTO utilisateurs VALUES (nomUtilisateur, motDePasse, roleUtilisateur);
+END //
+DELIMITER ;
 --procédure permettant de créer des acteurs :
+DELIMITER //
+CREATE PROCEDURE creerActeur (IN prenom varchar(100), IN nom varchar(100), IN ddn DATE, IN sexe enum('masculin', 'feminin', 'non-binaire'), nationnalite varchar(100))
+BEGIN
+DECLARE idActuel integer;
+SELECT max(id) FROM acteurs INTO idActuel;
+INSERT INTO acteurs VALUES (idActuel+1, prenom, nom, ddn, sexe, nationnalite);
+END //
+DELIMITER ;
 --procédure permettant de rajouter un vote avec ou sans commentaire pour un film :
+DELIMITER //
+CREATE PROCEDURE rajouterVoteFilm (IN nomUtilisateur varchar(50), IN idFilm2 integer, IN note double, IN contenuCommentaire longtext)
+BEGIN
+DECLARE idActuelVoteFilm integer;
+SELECT max(id) FROM votesFilms INTO idActuelVoteFilm;
+INSERT INTO votesFilms VALUES (idActuelVoteFilm+1, nomUtilisateur, idFilm2, note);
+UPDATE films SET noteTotale = noteTotale + note WHERE idFilm = idFilm2;
+UPDATE films SET nbVotes = nbVotes + 1 WHERE idFilm = idFilm2;
+UPDATE films SET noteGlobale = noteTotale / nbVotes WHERE idFilm = idFilm2;
+IF contenuCommentaire <> "" THEN
+	INSERT INTO commentairesFilms VALUES (idActuelVoteFilm+1, contenuCommentaire);
+END IF;
+END //
+DELIMITER ;
 --procédure permettant de rajouter un vote avec ou sans commentaire pour une série :
+DELIMITER //
+CREATE PROCEDURE rajouterVoteSerie (IN nomUtilisateur varchar(50), IN idSerie2 integer, IN note double, IN contenuCommentaire longtext)
+BEGIN
+DECLARE idActuelVoteSerie integer;
+SELECT max(id) FROM votesSeries INTO idActuelVoteSerie;
+INSERT INTO votesSeries VALUES (idActuelVoteSerie+1, nomUtilisateur, idSerie2, note);
+UPDATE series SET noteTotale = (noteTotale + note) WHERE idSerie = idSerie2;
+UPDATE series SET nbVotes = nbVotes + 1 WHERE idSerie = idSerie2;
+UPDATE series SET noteGlobale = noteTotale / nbVotes WHERE idSerie = idSerie2;
+IF contenuCommentaire <> "" THEN
+	INSERT INTO commentairesSeries VALUES (idActuelVoteSerie+1, contenuCommentaire);
+END IF;
+END //
+DELIMITER ;
 --procédure permettant de rajouter un genre :
+DELIMITER //
+CREATE PROCEDURE creerGenre (IN nomGenre varchar(50))
+BEGIN
+INSERT INTO genres VALUES (nomGenre);
+END //
+DELIMITER ;
+--procédure permettant de voir les commentaires et notes des utilisateurs d'un film en particulier :
+DELIMITER //
+CREATE PROCEDURE voirCommentairesNotesUtilisateursFilms (IN idFilm2 integer)
+BEGIN
+SELECT V.nomUtilisateur, V.note, C.contenu FROM votesFilms V, commentairesFilms C WHERE V.id = idFilm2 AND idFilm2 in (SELECT id FROM commentairesFilms);
+END //
+DELIMITER ;
+--procédure permettant de voir les commentaires et notes des utilisateurs d'une série en particulier :
+DELIMITER //
+CREATE PROCEDURE voirCommentairesNotesUtilisateursSeries (IN idSerie2 integer)
+BEGIN
+SELECT V.nomUtilisateur, V.note, C.contenu FROM votesSeries V, commentairesSeries C WHERE V.id = idSerie2 AND idSerie2 in (SELECT id FROM commentairesSeries);
+END //
+DELIMITER ;
