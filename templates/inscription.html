@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Rater</title>
+    <link rel="stylesheet" type="text/css" href="../static/connexion.css">
+    <script type="text/javascript" src="../static/connexion.js"></script>
+</head>
+<body>
+  <p>INSCRIPTION</p>
+    <form action="inscription" method="post">
+        <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
+        MOT DE PASSE : <input type="password" name="password"></p><br>
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
+        <input type="submit" value="INSCRIPTION" name="inscription">
+    </form>
+    <a href = "connexion">DÉJÀ UN COMPTE ? CLIQUEZ ICI</a>
+</body>
+</html>

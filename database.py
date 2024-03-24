@@ -8,9 +8,6 @@ from sql_utils import run_sql_file
 
 class Database:
     def __init__(self):
-        """
-            Chargez les variables d'environnement de votre fichier .env, puis complétez les lignes 15 à 19 afin de récupérer les valeurs de ces variables
-        """
         load_dotenv()
         self.host = os.environ.get("HOST")
         self.port = int(os.environ.get("PORT"))
@@ -33,3 +30,10 @@ class Database:
         )
 
         self.cursor = self.connection.cursor()
+
+    def verifyConnexion(self, req):
+        self.cursor.execute(req)
+        return self.cursor.fetchone()
+
+    def addValuestoDb(self, req):
+        self.cursor.execute(req)
