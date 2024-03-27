@@ -37,3 +37,23 @@ class Database:
 
     def addValuestoDb(self, req):
         self.cursor.execute(req)
+
+    def select_genres(self):
+        self.cursor.execute("SELECT * FROM genres")
+        genres = [x[0] for x in self.cursor.fetchall()]
+        return genres
+
+    def get_table_columns(self, table):
+        self.cursor.execute(f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}' AND TABLE_SCHEMA = '{self.database}' ORDER BY ORDINAL_POSITION;")
+        res = [x[0] for x in self.cursor.fetchall()]
+        return res
+
+    def get_table_data(self, table, nomfilm,genre,sousgenre,annee,acteur,nbvote,note, saison):
+        if (table == "films") :
+            req = f"CALL filtrerFilms('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', {nbvote}, {note})"
+        else :
+            req = f"CALL filtrerSeries('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', '%{saison}%', {nbvote}, {note})"
+
+        self.cursor.execute(req)
+
+        return [list(x) for x in self.cursor.fetchall()]
