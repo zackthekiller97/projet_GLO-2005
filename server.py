@@ -16,6 +16,19 @@ def fetchTableData(table, nomfilm, genre, sousgenre, annee, acteur, nbvote, note
     }
     return table_dict
 
+def fetchTableDataUser(table, nomfilm, genre, sousgenre, annee, acteur, nbvote, note, saison, username):
+    table_dict = {
+        "columns": database.get_table_columns(table),
+        "entries": database.get_table_data_user(table, nomfilm,genre,sousgenre,annee,acteur,nbvote,note, saison, username)
+    }
+    return table_dict
+
+def fetchTableDataResearch(table, nomfilm):
+    table_dict = {
+        "entries": database.get_table_data_research(table, nomfilm)
+    }
+    return table_dict
+
 @app.route("/")
 def main():
     return render_template('connexion.html')
@@ -110,6 +123,89 @@ def filtrerfilmsseries():
         print(tableType,nomFilm,genre,sgenre,annee,acteur,nbvote,note,saison)
         table = fetchTableData(tableType, nomFilm, genre, sgenre, annee, acteur, nbvote, note, saison)
         return render_template('accueil.html', genres=genres, profile=ProfileUtilisateur, table=table, type=tableType)
+
+@app.route('/monclassement')
+def monclassementFilms():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        genres = database.select_genres()
+        global tableType
+        tableType = "films"
+        print(ProfileUtilisateur["username"])
+        table = fetchTableDataUser(tableType, "", "", "", "", "", "0", "0.0", "", ProfileUtilisateur["username"])
+        return render_template('monclassement.html', genres=genres, profile=ProfileUtilisateur, table=table, type=tableType)
+
+@app.route('/monclassementSeries')
+def monclassementSeries():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        genres = database.select_genres()
+        global tableType
+        tableType = "series"
+        table = fetchTableDataUser(tableType, "", "", "", "", "", "0", "0.0", "", ProfileUtilisateur["username"])
+        return render_template('monclassement.html', genres=genres, profile=ProfileUtilisateur, table=table, type=tableType)
+
+@app.route('/filtrerUser', methods={'POST'})
+def filtrerfilmsseriesUser():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        nomFilm = request.form.get('nomfilm')
+        genre = request.form.get('genres')
+        sgenre = request.form.get('sgenres')
+        annee = request.form.get('annee')
+        acteur = request.form.get('acteur')
+        nbvote = request.form.get('nbvotes')
+        note = request.form.get('note')
+        saison = request.form.get('saison')
+        global tableType
+        genres = database.select_genres()
+        print(tableType,nomFilm,genre,sgenre,annee,acteur,nbvote,note,saison)
+        table = fetchTableDataUser(tableType, nomFilm, genre, sgenre, annee, acteur, nbvote, note, saison, ProfileUtilisateur["username"])
+        return render_template('monclassement.html', genres=genres, profile=ProfileUtilisateur, table=table, type=tableType)
+
+@app.route('/logout')
+def logout():
+    global connexionApprouvee
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        connexionApprouvee = False
+        global ProfileUtilisateur
+        ProfileUtilisateur = {}
+        return render_template('connexion.html')
+
+@app.route("/rechercher")
+def rechercher():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        global tableType
+        tableType = "films"
+        table={}
+        return render_template('rechercher.html', type=tableType, table=table, profile=ProfileUtilisateur)
+
+@app.route("/rechercherSeries")
+def rechercherSeries():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        global tableType
+        tableType = "series"
+        table={}
+        return render_template('rechercher.html', type=tableType, table=table, profile=ProfileUtilisateur)
+
+@app.route("/rechercherFilmSerie", methods={'POST'})
+def rechercherFilmSerie():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        nomFilm = request.form.get('nomfilm')
+        global tableType
+        table = fetchTableDataResearch(tableType, nomFilm)
+        return render_template('rechercher.html', table=table, type=tableType, profile=ProfileUtilisateur)
 
 if __name__ == "__main__":
     app.run()

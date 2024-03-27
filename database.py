@@ -57,3 +57,23 @@ class Database:
         self.cursor.execute(req)
 
         return [list(x) for x in self.cursor.fetchall()]
+
+    def get_table_data_user(self, table, nomfilm,genre,sousgenre,annee,acteur,nbvote,note, saison, username):
+        if (table == "films") :
+            req = f"CALL filtrerFilmsUtilisateur('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', {nbvote}, {note}, {username})"
+        else :
+            req = f"CALL filtrerSeriesUtilisateur('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', '%{saison}%', {nbvote}, {note}, {username})"
+
+        self.cursor.execute(req)
+
+        return [list(x) for x in self.cursor.fetchall()]
+
+    def get_table_data_research(self, table, nomfilm):
+        if (table == "films") :
+            req = f"CALL rechercherFilms('%{nomfilm}%')"
+        else :
+            req = f"CALL rechercherSeries('%{nomfilm}%')"
+
+        self.cursor.execute(req)
+
+        return [list(x) for x in self.cursor.fetchall()]

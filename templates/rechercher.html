@@ -2,9 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Movie Rater</title>
 </head>
 <body>
+    <nav>
+    <a href="accueil">ACCUEIL</a>
+    <a href="rechercher">RECHERCHER</a>
+    <a href="monclassement">MON CLASSEMENT</a>
+    {% if profile["role"] == "admin" %}
+        <a href="ajouter">AJOUTER</a>
+    {% endif %}
+    <a href="logout">LOGOUT</a>
+</nav>
+  <p>RECHERCHER</p>
+    <div name="options">
+      <a href="rechercher">FILMS</a>
+      <a href="rechercherSeries">SERIES</a>
+  </div>
+    <form action="rechercherFilmSerie" method="post">
+    <p>NOM : <input type="text" name="nomfilm"></p>
+    <input type="submit" value="RECHERCHE" name="recherche">
+    </form>
+<div name="films">
+     <table name="table">
+         <thead>
+            <tr>
+                <th>id</th>
+                {% if type == "films" %}
+                     <th>Nom film</th>
+                {% else %}
+                    <th>Nom série</th>
+                {% endif %}
+                <th>Genre</th>
+                <th>Sous-Genre</th>
+                <th>Année</th>
+                <th>Acteurs</th>
+                <th>Nombre votes</th>
+                <th>Note totale</th>
+                <th>Note globale</th>
+                {% if type == "series" %}
+                     <th>Saison</th>
+                {% endif %}
+            </tr>
+         </thead>
+         <tbody>
+            {% for entry in table.entries %}
+                <tr>
+                    {% for value in entry %}
+                        <td>{{value}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+         </tbody>
+     </table>
+  </div>
 
 </body>
 </html>

@@ -9,7 +9,7 @@
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
     <a href="monclassement">MON CLASSEMENT</a>
-    {% if profile.admin == "admin" %}
+    {% if profile["role"] == "admin" %}
         <a href="ajouter">AJOUTER</a>
     {% endif %}
     <a href="logout">LOGOUT</a>
@@ -39,8 +39,8 @@
       </select>
       <p>ANNEE : <input type="text" name="annee"></p>
       <p>ACTEUR : <input type="text" name="acteur"></p>
-      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes"></p>
-      <p>NOTE MINIMALE : <input type="text" name="note"></p>
+      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes" value="0"></p>
+      <p>NOTE MINIMALE : <input type="text" name="note" value="0.0"></p>
           <p>SAISON : <input type="text" name="saison"></p>
       <input type="submit" value="FILTRER" name="filtrer">
       </form>

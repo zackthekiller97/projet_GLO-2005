@@ -115,3 +115,18 @@ BEGIN
 SELECT V.nomUtilisateur, V.note, C.contenu FROM votesSeries V, commentairesSeries C WHERE V.id = idSerie2 AND idSerie2 in (SELECT id FROM commentairesSeries);
 END //
 DELIMITER ;
+--procédure permettant de rechercher des films
+DELIMITER //
+CREATE PROCEDURE rechercherFilms (IN nomFilm2 varchar(100))
+BEGIN
+SELECT * FROM films WHERE nomFilm LIKE nomFilm2 ORDER BY noteGlobale DESC;
+END //
+DELIMITER ;
+--procédure permettant de rechercher des séries
+DELIMITER //
+CREATE PROCEDURE rechercherSeries (IN nomSerie2 varchar(100))
+BEGIN
+SELECT * FROM series WHERE nomSerie LIKE nomSerie2 ORDER BY noteGlobale DESC;
+END //
+DELIMITER ;
+

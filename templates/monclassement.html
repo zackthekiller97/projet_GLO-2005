@@ -2,9 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Movie Rater</title>
 </head>
 <body>
+<nav>
+    <a href="accueil">ACCUEIL</a>
+    <a href="rechercher">RECHERCHER</a>
+    <a href="monclassement">MON CLASSEMENT</a>
+    {% if profile["role"] == "admin" %}
+        <a href="ajouter">AJOUTER</a>
+    {% endif %}
+    <a href="logout">LOGOUT</a>
+</nav>
+  <p>MON CLASSEMENT</p>
+  <div name="options">
+      <a href="monclassement">FILMS</a>
+      <a href="monclassementSeries">SERIES</a>
+  </div>
+  <div name="filtrerUser">
+      <form action="filtrerUser" method="post">
+      <p>FILTRER PAR :</p>
+      <p>NOM FILM : <input type="text" name="nomfilm"></p>
+      <label for="genres">GENRE :</label>
+      <select name="genres" id="genres">
+          <option value="">Tous</option>
+          {% for genre in genres %}
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <label for="sgenres">SOUS-GENRE :</label>
+      <select name="sgenres" id="sgenres">
+          <option value="">Tous</option>
+          {% for genre in genres %}
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <p>ANNEE : <input type="text" name="annee"></p>
+      <p>ACTEUR : <input type="text" name="acteur"></p>
+      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes"></p>
+      <p>NOTE MINIMALE : <input type="text" name="note" value="0"></p>
+          <p>SAISON : <input type="text" name="saison" value="0.0"></p>
+      <input type="submit" value="FILTRER" name="filtrer">
+      </form>
+  </div>
+  <div name="films">
+     <table name="table">
+         <thead>
+            <tr>
+                {% for column in table.columns %}
+                    <th>{{column}}</th>
+                {% endfor %}
+                <th>Nom d'utilisateur</th>
+                <th>Ma note</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for entry in table.entries %}
+                <tr>
+                    {% for value in entry %}
+                        <td>{{value}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+         </tbody>
+     </table>
+  </div>
 
 </body>
 </html>
