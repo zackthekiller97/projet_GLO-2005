@@ -207,5 +207,9 @@ def rechercherFilmSerie():
         table = fetchTableDataResearch(tableType, nomFilm)
         return render_template('rechercher.html', table=table, type=tableType, profile=ProfileUtilisateur)
 
+@app.route("/infoFilmSerie", methods={'POST'})
+def infoFilmSerie():
+    nom = request.args.get('nom')
+
 if __name__ == "__main__":
     app.run()

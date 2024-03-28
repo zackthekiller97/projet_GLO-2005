@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Rater</title>
+    <script type="text/javascript" src="../static/infoFilm.js"></script>
 </head>
-<body>
+<body onload="ajouterHref()">
 <nav>
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
@@ -60,7 +61,11 @@
             {% for entry in table.entries %}
                 <tr>
                     {% for value in entry %}
-                        <td>{{value}}</td>
+                        {% if loop.index == 2 %}
+                            <td name="nom">{{value}}</td>
+                        {% else %}
+                            <td>{{value}}</td>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             {% endfor %}
