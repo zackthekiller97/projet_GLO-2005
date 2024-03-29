@@ -50,8 +50,12 @@
             {% for entry in table.entries %}
                 <tr>
                     {% for value in entry %}
-                        {% if loop.index == 2 %}
-                            <td name="nom">{{value}}</td>
+                        {% if loop.index == 1 %}
+                            {% if type == "series" %}
+                                <td name="saison">{{value}}</td>
+                            {% else %}
+                                <td name="nom">{{value}}</td>
+                            {% endif %}
                         {% else %}
                             <td>{{value}}</td>
                         {% endif %}

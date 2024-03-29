@@ -70,10 +70,54 @@ class Database:
 
     def get_table_data_research(self, table, nomfilm):
         if (table == "films") :
-            req = f"CALL rechercherFilms('%{nomfilm}%')"
+            req = f"CALL rechercherFilms('%{nomfilm}%');"
         else :
-            req = f"CALL rechercherSeries('%{nomfilm}%')"
+            req = f"CALL rechercherSeries('%{nomfilm}%');"
 
         self.cursor.execute(req)
 
         return [list(x) for x in self.cursor.fetchall()]
+
+    def get_movieserie_data(self, table, id):
+        if (table == "films"):
+            req = f"SELECT * FROM films WHERE idFilm = '{id}';"
+        else :
+            req = f"SELECT * FROM series WHERE idSerie = '{id}';"
+        self.cursor.execute(req)
+
+        return [list(x) for x in self.cursor.fetchall()]
+
+    def verifieVoteUser(self, user, id, table):
+        if (table == "films"):
+            req = f"SELECT * FROM votesFilms WHERE nomUtilisateur = {user} AND idFilm = '{id}';"
+        else:
+            req = f"SELECT * FROM votesSeries WHERE nomUtilisateur = {user} AND idSerie = '{id}';"
+
+        self.cursor.execute(req)
+        return [list(x) for x in self.cursor.fetchall()]
+
+    def get_comments_movieserieUser(self, table, id):
+        if (table == "films"):
+            req = f"SELECT contenu FROM commentairesFilms WHERE id = '{id}';"
+        else:
+            req = f"SELECT contenu FROM commentairesSeries WHERE id = '{id}';"
+
+        self.cursor.execute(req)
+        return [list(x) for x in self.cursor.fetchall()]
+
+    def get_comments_movieserie(self, table, id):
+        if (table=="films"):
+            req = f"CALL voirCommentairesNotesUtilisateursFilms('{id}');"
+        else:
+            req = f"CALL voirCommentairesNotesUtilisateursSeries('{id}');"
+
+        self.cursor.execute(req)
+        return [list(x) for x in self.cursor.fetchall()]
+
+    def voter_film_serie(self, table, user, note, commentaire, film):
+        if (table=="films"):
+            req = f"CALL rajouterVoteFilm({user},'{film}','{note}','{commentaire}');"
+        else:
+            req = f"CALL rajouterVoteSerie({user},'{film}','{note}','{commentaire}');"
+
+        self.cursor.execute(req)

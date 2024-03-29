@@ -6,6 +6,7 @@ app = Flask(__name__)
 ProfileUtilisateur = {}
 connexionApprouvee = False
 tableType = "films"
+filmChoisi = ""
 
 database = Database()
 
@@ -29,6 +30,24 @@ def fetchTableDataResearch(table, nomfilm):
     }
     return table_dict
 
+def fetchTableDataFilm(table, nomfilm):
+    table_dict = {
+        "entries": database.get_movieserie_data(table, nomfilm)
+    }
+    return table_dict
+
+def fetchUserVote(table, nomfilm, user):
+    table_dict = {
+        "entries": database.verifieVoteUser(user, nomfilm, table),
+        "commentaire": database.get_comments_movieserieUser(table, (database.verifieVoteUser(user, nomfilm, table)[0][0] if database.verifieVoteUser(user, nomfilm, table)!=[] else ""))
+    }
+    return table_dict
+
+def fetchCommentaires(table, nomfilm):
+    table_dict = {
+        "entries": database.get_comments_movieserie(table, nomfilm)
+    }
+    return table_dict
 @app.route("/")
 def main():
     return render_template('connexion.html')
@@ -207,9 +226,31 @@ def rechercherFilmSerie():
         table = fetchTableDataResearch(tableType, nomFilm)
         return render_template('rechercher.html', table=table, type=tableType, profile=ProfileUtilisateur)
 
-@app.route("/infoFilmSerie", methods={'POST'})
+@app.route("/infofilm", methods={'GET', 'POST'})
 def infoFilmSerie():
-    nom = request.args.get('nom')
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        nom = request.args.get('nom')
+        global filmChoisi
+        filmChoisi = nom
+        table = fetchTableDataFilm(tableType, nom)
+        voteUser = fetchUserVote(tableType, nom, ProfileUtilisateur["username"])
+        print(voteUser)
+        commentaires = fetchCommentaires(tableType, nom)
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires)
+
+@app.route("/vote", methods={'POST'})
+def vote():
+    note = request.form.get('votefilm')
+    commentaire = request.form.get('commentairefilm')
+    database.voter_film_serie(tableType, ProfileUtilisateur["username"], note, commentaire, filmChoisi)
+    table = fetchTableDataFilm(tableType, filmChoisi)
+    voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"])
+    commentaires = fetchCommentaires(tableType, filmChoisi)
+    print(commentaires)
+    return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires)
+
 
 if __name__ == "__main__":
     app.run()

@@ -105,14 +105,14 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE voirCommentairesNotesUtilisateursFilms (IN idFilm2 integer)
 BEGIN
-SELECT V.nomUtilisateur, V.note, C.contenu FROM votesFilms V, commentairesFilms C WHERE V.id = idFilm2 AND idFilm2 in (SELECT id FROM commentairesFilms);
+SELECT V.nomUtilisateur, V.note, C.contenu FROM votesFilms V, commentairesFilms C WHERE V.idFilm = idFilm2 AND V.id = C.id ;
 END //
-DELIMITER ;
+DELIMITER;
 --procédure permettant de voir les commentaires et notes des utilisateurs d'une série en particulier :
 DELIMITER //
 CREATE PROCEDURE voirCommentairesNotesUtilisateursSeries (IN idSerie2 integer)
 BEGIN
-SELECT V.nomUtilisateur, V.note, C.contenu FROM votesSeries V, commentairesSeries C WHERE V.id = idSerie2 AND idSerie2 in (SELECT id FROM commentairesSeries);
+SELECT V.nomUtilisateur, V.note, C.contenu FROM votesSeries V, commentairesSeries C WHERE V.idSerie = idSerie2 AND V.id = C.id ;
 END //
 DELIMITER ;
 --procédure permettant de rechercher des films
