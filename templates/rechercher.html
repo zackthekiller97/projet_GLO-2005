@@ -47,21 +47,25 @@
             </tr>
          </thead>
          <tbody>
-            {% for entry in table.entries %}
-                <tr>
-                    {% for value in entry %}
-                        {% if loop.index == 1 %}
-                            {% if type == "series" %}
-                                <td name="saison">{{value}}</td>
+            {% if table.entries == [] %}
+                <p>Aucune données à afficher</p>
+            {% else %}
+                {% for entry in table.entries %}
+                    <tr>
+                        {% for value in entry %}
+                            {% if loop.index == 1 %}
+                                {% if type == "series" %}
+                                    <td name="saison">{{value}}</td>
+                                {% else %}
+                                    <td name="nom">{{value}}</td>
+                                {% endif %}
                             {% else %}
-                                <td name="nom">{{value}}</td>
+                                <td>{{value}}</td>
                             {% endif %}
-                        {% else %}
-                            <td>{{value}}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+         {% endif %}
          </tbody>
      </table>
   </div>

@@ -24,10 +24,11 @@
     <p>ACTEURS : {{table.entries[0][5]}}</p>
     {% if voteUser.entries == [] %}
         <form action="vote" method="post">
-            <p>VOTE : <input type="text" name="votefilm"></p>
-            <p>COMMENTAIRE : <input type="text" name="commentairefilm"></p>
+            <p>VOTE : <input type="text" name="votefilm" placeholder="Entrez un chiffre (à virgule ou non) entre 0 et 10"></p>
+            <p>COMMENTAIRE : <input type="text" name="commentairefilm" placeholder="Entrez un commentaire (facultatif)"></p>
             <input type="submit" value="VOTER" name="voter">
         </form>
+        <p>{{message}}</p>
     {% else %}
         <p>MON VOTE : {{voteUser.entries[0][3]}}</p>
         {% if voteUser.commentaire != [] %}

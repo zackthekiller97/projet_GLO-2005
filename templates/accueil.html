@@ -50,27 +50,40 @@
      <table name="table">
          <thead>
             <tr>
-                {% for column in table.columns %}
-                    <th>{{column}}</th>
-                {% endfor %}
+                <th>Position</th>
+                <th>Nom du film</th>
+                <th>Année</th>
+                <th>Genre</th>
+                <th>Sous-Genre</th>
+                <th>Acteurs</th>
+                <th>Nombre de votes</th>
+                <th>Note Totale</th>
+                <th>Note Moyenne</th>
+                {% if type == "series" %}
+                    <th>Saison</th>
+                {% endif %}
             </tr>
          </thead>
          <tbody>
-            {% for entry in table.entries %}
-                <tr>
-                    {% for value in entry %}
-                        {% if loop.index == 1 %}
-                            {% if type == "series" %}
-                                <td name="saison">{{value}}</td>
+            {% if table.entries == [] %}
+                <p>Aucune données à afficher</p>
+            {% else %}
+                {% for entry in table.entries %}
+                    <tr>
+                        {% for value in entry %}
+                            {% if loop.index == 1 %}
+                                {% if type == "series" %}
+                                    <td name="saison">{{value}}</td>
+                                {% else %}
+                                    <td name="nom">{{value}}</td>
+                                {% endif %}
                             {% else %}
-                                <td name="nom">{{value}}</td>
+                                <td>{{value}}</td>
                             {% endif %}
-                        {% else %}
-                            <td>{{value}}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+         {% endif %}
          </tbody>
      </table>
   </div>
