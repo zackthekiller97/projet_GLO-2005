@@ -1,11 +1,11 @@
 //boucle qui va itérer parmis tous les elements qui ont le name nom et changer leur code html pour un href avec param
-var compteur = 1
-var compteurSeries = 0
+var compteur = 1 //compteur pour la position du film dans le classement
+var compteurSeries = 0 //compteur pour la position de la série dans le classement
 
 function ajouterHref()
 {
-    var elements = document.getElementsByName("nom");
-    var elements2 = document.getElementsByName("saison");
+    var elements = document.getElementsByName("nom"); //on effectue l'action pour chaque élément avec le name nom (film)
+    var elements2 = document.getElementsByName("saison"); //on effectue l'action pour chaque élément avec le name saison (série)
     elements.forEach(addHref)
     elements2.forEach(addHrefS)
 }

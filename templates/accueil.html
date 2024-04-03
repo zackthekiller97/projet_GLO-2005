@@ -5,18 +5,18 @@
     <title>Movie Rater</title>
     <script type="text/javascript" src="../static/infoFilm.js"></script>
 </head>
-<body onload="ajouterHref()">
-<nav>
+<body onload="ajouterHref()"> <!-- appelle la fonction du fichier js pour rajouter les liens vers infoFilm à tous les films du tableau -->
+<nav> <!-- onglet de navigation avec les autres pages html -->
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
     <a href="monclassement">MON CLASSEMENT</a>
-    {% if profile["role"] == "admin" %}
+    {% if profile["role"] == "admin" %} <!-- seuls les admins ont accès à cette page -->
         <a href="ajouter">AJOUTER</a>
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
   <p>CLASSEMENT GÉNÉRAL</p>
-  <div name="options">
+  <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
       <a href="accueil">FILMS</a>
       <a href="accueilSeries">SERIES</a>
   </div>
@@ -27,21 +27,21 @@
       <label for="genres">GENRE :</label>
       <select name="genres" id="genres">
           <option value="">Tous</option>
-          {% for genre in genres %}
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
             <option value={{genre}}>{{genre}}</option>
           {% endfor %}
       </select>
       <label for="sgenres">SOUS-GENRE :</label>
       <select name="sgenres" id="sgenres">
           <option value="">Tous</option>
-          {% for genre in genres %}
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
             <option value={{genre}}>{{genre}}</option>
           {% endfor %}
       </select>
       <p>ANNEE : <input type="text" name="annee"></p>
       <p>ACTEUR : <input type="text" name="acteur"></p>
-      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes" value="0"></p>
-      <p>NOTE MINIMALE : <input type="text" name="note" value="0.0"></p>
+      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes" value="0"></p> <!-- on met la valeur par défaut 0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
+      <p>NOTE MINIMALE : <input type="text" name="note" value="0.0"></p> <!-- on met la valeur par défaut 0.0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
           <p>SAISON : <input type="text" name="saison"></p>
       <input type="submit" value="FILTRER" name="filtrer">
       </form>
@@ -51,7 +51,7 @@
          <thead>
             <tr>
                 <th>Position</th>
-                <th>Nom du film</th>
+                <th>Nom</th>
                 <th>Année</th>
                 <th>Genre</th>
                 <th>Sous-Genre</th>
@@ -59,25 +59,25 @@
                 <th>Nombre de votes</th>
                 <th>Note Totale</th>
                 <th>Note Moyenne</th>
-                {% if type == "series" %}
+                {% if type == "series" %} <!-- si on veut voir les séries, on ajoute la colonne saison -->
                     <th>Saison</th>
                 {% endif %}
             </tr>
          </thead>
          <tbody>
-            {% if table.entries == [] %}
+            {% if table.entries == [] %} <!-- si la table est vide ou la commande est erronée, ce message est affiché -->
                 <p>Aucune données à afficher</p>
             {% else %}
                 {% for entry in table.entries %}
                     <tr>
                         {% for value in entry %}
-                            {% if loop.index == 1 %}
-                                {% if type == "series" %}
+                            {% if loop.index == 1 %} <!-- on met le lien vers infoFilm dans chaque 1ere colonne de chaque donnée -->
+                                {% if type == "series" %} <!-- on différencie les films des séries, car chacun ont leur table propre -->
                                     <td name="saison">{{value}}</td>
                                 {% else %}
                                     <td name="nom">{{value}}</td>
                                 {% endif %}
-                            {% else %}
+                            {% else %}  <!-- toutes les autres valeurs n'ont pas de lien -->
                                 <td>{{value}}</td>
                             {% endif %}
                         {% endfor %}

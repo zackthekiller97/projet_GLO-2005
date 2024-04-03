@@ -5,18 +5,18 @@
     <title>Movie Rater</title>
     <script type="text/javascript" src="../static/infoFilm.js"></script>
 </head>
-<body onLoad="ajouterHref()">
-    <nav>
+<body onLoad="ajouterHref()">  <!-- appelle la fonction du fichier js pour rajouter les liens vers infoFilm à tous les films du tableau -->
+    <nav> <!-- onglet de navigation avec les autres pages html -->
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
     <a href="monclassement">MON CLASSEMENT</a>
-    {% if profile["role"] == "admin" %}
+    {% if profile["role"] == "admin" %} <!-- seuls les admins ont accès à cette page -->
         <a href="ajouter">AJOUTER</a>
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
   <p>RECHERCHER</p>
-    <div name="options">
+    <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
       <a href="rechercher">FILMS</a>
       <a href="rechercherSeries">SERIES</a>
   </div>
@@ -29,37 +29,33 @@
          <thead>
             <tr>
                 <th>id</th>
-                {% if type == "films" %}
-                     <th>Nom film</th>
-                {% else %}
-                    <th>Nom série</th>
-                {% endif %}
+                <th>Nom</th>
                 <th>Genre</th>
                 <th>Sous-Genre</th>
                 <th>Année</th>
                 <th>Acteurs</th>
-                <th>Nombre votes</th>
+                <th>Nombre de votes</th>
                 <th>Note totale</th>
-                <th>Note globale</th>
-                {% if type == "series" %}
+                <th>Note moyenne</th>
+                {% if type == "series" %} <!-- si on veut voir les séries, on ajoute la colonne saison -->
                      <th>Saison</th>
                 {% endif %}
             </tr>
          </thead>
          <tbody>
             {% if table.entries == [] %}
-                <p>Aucune données à afficher</p>
+                <p>Aucune données à afficher</p> <!-- si la table est vide ou la commande est erronée, ce message est affiché -->
             {% else %}
                 {% for entry in table.entries %}
                     <tr>
                         {% for value in entry %}
-                            {% if loop.index == 1 %}
-                                {% if type == "series" %}
+                            {% if loop.index == 1 %} <!-- on met le lien vers infoFilm dans chaque 1ere colonne de chaque donnée -->
+                                {% if type == "series" %} <!-- on différencie les films des séries, car chacun ont leur table propre -->
                                     <td name="saison">{{value}}</td>
                                 {% else %}
                                     <td name="nom">{{value}}</td>
                                 {% endif %}
-                            {% else %}
+                            {% else %} <!-- toutes les autres valeurs n'ont pas de lien -->
                                 <td>{{value}}</td>
                             {% endif %}
                         {% endfor %}

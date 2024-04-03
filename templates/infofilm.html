@@ -5,31 +5,31 @@
     <title>Movie Rater</title>
 </head>
 <body>
-<nav>
+<nav> <!-- onglet de navigation avec les autres pages html -->
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
     <a href="monclassement">MON CLASSEMENT</a>
-    {% if profile["role"] == "admin" %}
+    {% if profile["role"] == "admin" %} <!-- seuls les admins ont accès à cette page -->
         <a href="ajouter">AJOUTER</a>
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
     <p>{{table.entries[0][1]}}</p>
     {% if type == "series"  %}
-    <p>SAISON : {{table.entries[0][9]}}</p>
+    <p>SAISON : {{table.entries[0][9]}}</p> <!-- on rajoute l'option saison si c'est une série -->
     {% endif %}
     <p>ANNÉE : {{table.entries[0][2]}}</p>
     <p>GENRE : {{table.entries[0][3]}}</p>
     <p>SOUS-GENRE : {{table.entries[0][4]}}</p>
     <p>ACTEURS : {{table.entries[0][5]}}</p>
-    {% if voteUser.entries == [] %}
+    {% if voteUser.entries == [] %} <!-- si le user n'a pas encore voté au film, on affiche un form -->
         <form action="vote" method="post">
             <p>VOTE : <input type="text" name="votefilm" placeholder="Entrez un chiffre (à virgule ou non) entre 0 et 10"></p>
             <p>COMMENTAIRE : <input type="text" name="commentairefilm" placeholder="Entrez un commentaire (facultatif)"></p>
             <input type="submit" value="VOTER" name="voter">
         </form>
-        <p>{{message}}</p>
-    {% else %}
+        <p>{{message}}</p> <!-- message d'erreur qui est affiché ici si la note n'est pas un chiffre entre 0 et 10 -->
+    {% else %} <!-- si le user a déjà voté au film, on affiche son vote et son commentaire -->
         <p>MON VOTE : {{voteUser.entries[0][3]}}</p>
         {% if voteUser.commentaire != [] %}
             <p>MON COMMENTAIRE : {{voteUser.commentaire[0][0]}}</p>

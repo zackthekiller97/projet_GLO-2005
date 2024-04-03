@@ -12,10 +12,10 @@
         <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
         MOT DE PASSE : <input type="password" name="password"></p><br>
         {% if message %}
-        <p>{{ message }}</p>
+        <p>{{ message }}</p> <!-- on affiche un message d'erreur si le nom d'utilisateur existe déjà -->
         {% endif %}
         <input type="submit" value="INSCRIPTION" name="inscription">
     </form>
-    <a href = "connexion">DÉJÀ UN COMPTE ? CLIQUEZ ICI</a>
+    <a href = "connexion">DÉJÀ UN COMPTE ? CLIQUEZ ICI</a> <!-- lien vers la page de connexion -->
 </body>
 </html>
