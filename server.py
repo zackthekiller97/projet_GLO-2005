@@ -1,5 +1,5 @@
 from flask import Flask, render_template, Response, request
-
+import bcrypt
 from database import Database
 
 app = Flask(__name__)
@@ -7,6 +7,7 @@ ProfileUtilisateur = {} #informations sur l'utilisateur connecté
 connexionApprouvee = False #indique si l'utilisateur s'est connecté avant d'ouvrir d'autres pages (token)
 tableType = "films" #type de table à choisir lors des requêtes (films ou séries)
 filmChoisi = "" #film choisi lors de l'ouverture de la page infoFilm
+typeAjout = "film" #type d'élément à créer
 
 database = Database()
 
@@ -53,6 +54,7 @@ def fetchCommentaires(table, nomfilm):
     }
     return table_dict
 
+
 #route qui affiche la page de connexion du site
 @app.route("/")
 def main():
@@ -63,9 +65,15 @@ def main():
 def connexion():
     username = '"'+request.form.get('username')+'"'
     mdp = request.form.get('password')
+    bytes = mdp.encode('utf-8')
+    hash = bcrypt.hashpw(bytes, bcrypt.gensalt(rounds=12))
     cmd='SELECT motDePasse FROM utilisateurs WHERE nomUtilisateur = '+username+';'
     passeVrai = database.verifyConnexion(cmd)
-    if (passeVrai != None) and (mdp==passeVrai[0]):
+    print(hash)
+    motdepasse = passeVrai[0].replace("b'", "")
+    motdepasse = motdepasse.replace("'", "")
+    motdepasse = motdepasse.encode('utf-8')
+    if (passeVrai != None) and (bcrypt.checkpw(bytes,motdepasse)):
         cmd2 = 'SELECT * FROM utilisateurs WHERE nomUtilisateur = '+username+';'
         info = database.verifyConnexion(cmd2)
         global ProfileUtilisateur #on entre les infos de l'utilisateur dans la variable globale
@@ -79,16 +87,19 @@ def connexion():
         table = fetchTableData(tableType,"","","","","","0","0.0","") #on va chercher les infos des films sans filtre spécifique
         return render_template('accueil.html', profile=ProfileUtilisateur, genres=genres, table=table, type=tableType)
     return render_template('connexion.html', message="NOM D'UTILISATEUR OU MOT DE PASSE INVALIDE") #on retourne un message d'erreur si les informations de connexion sont erronées
-
 #route d'inscription d'un utilisateur
 @app.route("/inscription", methods={'POST'})
 def inscription():
-    username = '"' + request.form.get('username') + '"'
+    username = request.form.get('username')
     mdp = request.form.get('password')
-    cmd='SELECT nomUtilisateur FROM utilisateurs WHERE nomUtilisateur = '+username+';'
+    mdp = mdp.encode('utf-8')
+    salt = bcrypt.gensalt(rounds=12)
+    mdp = bcrypt.hashpw(mdp, salt)
+    print(mdp)
+    cmd=f"SELECT nomUtilisateur FROM utilisateurs WHERE nomUtilisateur = '{username}';"
     utilisateurPresent = database.verifyConnexion(cmd)
     if (utilisateurPresent == None):
-        cmd2 = f"INSERT INTO utilisateurs VALUES ('{username}', '{mdp}', 'user')" #on insère le nouvel utilisateur dans la db
+        cmd2 = f'INSERT INTO utilisateurs VALUES ("{username}", "{mdp}", "user")' #on insère le nouvel utilisateur dans la db
         database.addValuestoDb(cmd2)
         global ProfileUtilisateur #on entre les infos de l'utilisateur dans la variable globale
         ProfileUtilisateur["username"]=username
@@ -271,7 +282,8 @@ def infoFilmSerie():
 def vote():
     message = ""
     note = request.form.get('votefilm')
-    if type(note) == str or (note < 0 or note > 10): #on vérifie que la note soit un chiffre valide entre 0 et 10
+    note2 = float(note)
+    if note2 < 0 or note2 > 10: #on vérifie que la note soit un chiffre valide entre 0 et 10
         table = fetchTableDataFilm(tableType, filmChoisi) #on va chercher les infos du film choisi
         voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
         commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
@@ -284,6 +296,76 @@ def vote():
     commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
     return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires, message=message)
 
+@app.route("/ajouter", methods={'GET', 'POST'})
+def ajouterPage():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        genres = database.select_genres()  # on va chercher la liste des genres de la db genres pour le futur filtrage
+        global typeAjout
+        typeAjout = request.args.get('type')
+        message = ""
+        print(typeAjout)
+        return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message=message, genres=genres)
+
+@app.route("/creer", methods={'POST'})
+def ajouter():
+    if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
+        return render_template('connexion.html')
+    else:
+        genres = database.select_genres()  # on va chercher la liste des genres de la db genres pour le futur filtrage
+        global typeAjout
+        if (typeAjout == "film"):
+            try:
+                nom = request.form.get('nomfilm')
+                genre = request.form.get('genres')
+                sgenre = request.form.get('sgenres')
+                annee = request.form.get('annee')
+                acteurs = request.form.get('acteur')
+                print(nom,genre,sgenre,annee,acteurs)
+                if (nom == "" or genre == "" or sgenre == "" or annee == "" or acteurs == ""):
+                    return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message="Aucune case ne peut être vide", genres=genres)
+                database.ajouterFilm(nom,annee,genre,sgenre,acteurs)
+                message="film ajouté avec succès!"
+            except:
+                message="Valeurs incorrectes, veuillez recommencer"
+        elif (typeAjout == "serie"):
+            try:
+                nom = request.form.get('nomfilm')
+                genre = request.form.get('genres')
+                sgenre = request.form.get('sgenres')
+                annee = request.form.get('annee')
+                acteurs = request.form.get('acteur')
+                saison = request.form.get('saison')
+                if (nom == "" or genre == "" or sgenre == "" or annee == "" or acteurs == "" or saison == ""):
+                    return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message="Aucune case ne peut être vide", genres=genres)
+                database.ajouterSerie(nom,annee,genre,sgenre,acteurs, saison)
+                message="série ajouté avec succès!"
+            except:
+                message="Valeurs incorrectes, veuillez recommencer"
+        elif (typeAjout == "genre"):
+            try:
+                nom = request.form.get('nomGenre')
+                if (nom == ""):
+                    return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message="Aucune case ne peut être vide", genres=genres)
+                database.ajouterGenre(nom)
+                message="genre ajouté avec succès!"
+            except:
+                message="Valeurs incorrectes, veuillez recommencer"
+        else:
+            try:
+                prenom = request.form.get('prenom')
+                nom = request.form.get('nom')
+                ddn = request.form.get('ddn')
+                sexe = request.form.get('sexe')
+                nationnalite = request.form.get('nationnalite')
+                if (nom == "" or prenom == "" or ddn == "" or sexe == "" or nationnalite == ""):
+                    return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message="Aucune case ne peut être vide", genres=genres)
+                database.ajouterActeur(prenom, nom, ddn, sexe, nationnalite)
+                message = "acteur ajouté avec succès!"
+            except:
+                message = "Valeurs incorrectes, veuillez recommencer"
+        return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message=message, genres=genres)
 
 if __name__ == "__main__":
     app.run()

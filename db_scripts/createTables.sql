@@ -1,10 +1,10 @@
 USE projetGlo_bd;
-CREATE TABLE IF NOT EXISTS utilisateurs (nomUtilisateur varchar(50), motDePasse varchar(50), roleUtilisateur enum('admin', 'user'));
-INSERT INTO utilisateurs VALUES ('zackdev97', 'ZackTheKing1!', 'admin');
-INSERT INTO utilisateurs VALUES ('agingras2', 'alice1234', 'admin');
+CREATE TABLE IF NOT EXISTS utilisateurs (nomUtilisateur varchar(50), motDePasse varchar(300), roleUtilisateur enum('admin', 'user'));
+INSERT INTO utilisateurs VALUES ('zackdev97', "b'$2b$12$UWxQEAVpBm1VTbRuRsVxN.YugcYgclVSRPt.h.iYyta3AaipWBDKe'", 'admin');
+INSERT INTO utilisateurs VALUES ('agingras2', "b'$2b$12$uvvkhJV4tx7Av1aZaj1qLuWiO7dl2100kz5j.HLPeIU8VnD88QkDy'", 'admin');
 CREATE TABLE IF NOT EXISTS genres (nomGenre varchar(50), PRIMARY KEY(nomGenre));
 ALTER TABLE utilisateurs ADD CONSTRAINT pk_utilisateur PRIMARY KEY (nomUtilisateur);
-INSERT INTO genres VALUES ('suspense'), ('science-fiction'), ('policier'), ('drame'), ('horreur'), ('aventure'), ('comédie'), ('fantaisie'), ('documentaire'), ('romance'), ('action');
+INSERT INTO genres VALUES ('suspense'), ('science-fiction'), ('policier'), ('drame'), ('horreur'), ('aventure'), ('comédie'), ('fantaisie'), ('documentaire'), ('romance'), ('action'), ('comédie musicale');
 CREATE TABLE IF NOT EXISTS films (idFilm integer, nomFilm varchar(100), annee YEAR, genre varchar(50), sousGenre varchar(50), acteurs longtext, nbVotes integer, noteTotale integer, noteGlobale integer, PRIMARY KEY(idFilm), FOREIGN KEY (genre) REFERENCES genres(nomGenre) ON DELETE SET NULL, FOREIGN KEY (sousGenre) REFERENCES genres(nomGenre) ON DELETE SET NULL);
 CREATE TABLE IF NOT EXISTS series (idSerie integer, nomSerie varchar(100), annee YEAR, genre varchar(50), sousGenre varchar(50), acteurs longtext, nbVotes integer, noteTotale integer, noteGlobale integer, saison integer, PRIMARY KEY(idSerie), FOREIGN KEY (genre) REFERENCES genres(nomGenre) ON DELETE SET NULL, FOREIGN KEY (sousGenre) REFERENCES genres(nomGenre) ON DELETE SET NULL);
 CREATE TABLE IF NOT EXISTS commentairesFilms (id integer, contenu longtext, PRIMARY KEY(id));

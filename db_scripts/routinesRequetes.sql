@@ -50,7 +50,7 @@ END //
 DELIMITER ;
 --procédure permettant de créer des utilisateurs :
 DELIMITER //
-CREATE PROCEDURE creerUtilisateur (IN nomUtilisateur varchar(50), IN motDePasse varchar(50), IN roleUtilisateur enum('admin', 'user'))
+CREATE PROCEDURE creerUtilisateur (IN nomUtilisateur varchar(50), IN motDePasse varchar(300), IN roleUtilisateur enum('admin', 'user'))
 BEGIN
 INSERT INTO utilisateurs VALUES (nomUtilisateur, motDePasse, roleUtilisateur);
 END //

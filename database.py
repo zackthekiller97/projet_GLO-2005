@@ -121,3 +121,15 @@ class Database:
             req = f"CALL rajouterVoteSerie({user},'{film}','{note}','{commentaire}');"
 
         self.cursor.execute(req)
+
+    def ajouterFilm(self, nom, annee, genre, sousgenre, acteurs):
+        self.cursor.execute(f'CALL creerFilm("{nom}", "{annee}", "{genre}", "{sousgenre}", "{acteurs}")')
+
+    def ajouterSerie(self, nom, annee, genre, sousgenre, acteurs, saison):
+        self.cursor.execute(f'CALL creerSerie("{nom}", "{annee}", "{genre}", "{sousgenre}", "{acteurs}", "{saison}")')
+
+    def ajouterGenre(self, nom):
+        self.cursor.execute(f'CALL creerGenre("{nom}")')
+
+    def ajouterActeur(self, prenom, nom, ddn, sexe, nationnalite):
+        self.cursor.execute(f'CALL creerActeur("{prenom}", "{nom}", "{ddn}", "{sexe}", "{nationnalite}")')

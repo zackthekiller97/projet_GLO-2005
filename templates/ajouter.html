@@ -2,9 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Movie Rater</title>
+    <script type="text/javascript" src="../static/ajouter.js"></script>
 </head>
-<body>
-
+<body onload="SupprimerContenu()">
+<nav> <!-- onglet de navigation avec les autres pages html -->
+    <a href="accueil">ACCUEIL</a>
+    <a href="rechercher">RECHERCHER</a>
+    <a href="monclassement">MON CLASSEMENT</a>
+    {% if profile["role"] == "admin" %} <!-- seuls les admins ont accès à cette page -->
+        <a href="ajouter?type=film">AJOUTER</a>
+    {% endif %}
+    <a href="logout">LOGOUT</a>
+</nav>
+<p>AJOUTER</p>
+  <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
+      <a href="ajouter?type=film">FILM</a>
+      <a href="ajouter?type=serie">SERIE</a>
+      <a href="ajouter?type=genre">GENRE</a>
+      <a href="ajouter?type=acteur">ACTEUR</a>
+  </div>
+{% if typeAjout == "film" %}
+<form action="creer" method="post">
+      <p>NOM FILM : <input type="text" name="nomfilm"></p>
+      <label for="genres">GENRE :</label>
+      <select name="genres" id="genres">
+          <option value="">Tous</option>
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <label for="sgenres">SOUS-GENRE :</label>
+      <select name="sgenres" id="sgenres">
+          <option value="">Tous</option>
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <p>ANNEE : <input type="text" name="annee"></p>
+      <p>ACTEUR : <input type="text" name="acteur"></p>
+      <input type="submit" value="CRÉER" name="creer">
+</form>
+{% elif typeAjout == "serie" %}
+<form action="creer" method="post">
+      <p>NOM FILM : <input type="text" name="nomfilm"></p>
+      <label for="genres">GENRE :</label>
+      <select name="genres" id="genresS">
+          <option value="">Tous</option>
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <label for="sgenres">SOUS-GENRE :</label>
+      <select name="sgenres" id="sgenresS">
+          <option value="">Tous</option>
+          {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
+            <option value={{genre}}>{{genre}}</option>
+          {% endfor %}
+      </select>
+      <p>ANNEE : <input type="text" name="annee"></p>
+      <p>ACTEUR : <input type="text" name="acteur"></p>
+      <p>SAISON : <input type="text" name="saison"></p>
+      <input type="submit" value="CRÉER" name="creer">
+</form>
+{% elif typeAjout == "genre" %}
+<form action="creer" method="post">
+      <p>NOM GENRE : <input type="text" name="nomGenre"></p>
+      <input type="submit" value="CRÉER" name="creer">
+</form>
+{% else %}
+<form action="creer" method="post">
+      <p>PRENOM : <input type="text" name="prenom"></p>
+      <p>NOM : <input type="text" name="nom"></p>
+      <p>DATE DE NAISSANCE : <input type="text" name="ddn"></p>
+      <label for="sexe">SEXE :</label>
+      <select name="sexe" id="sexe">
+          <option value="masculin">Masculin</option>
+          <option value="feminin">Feminin</option>
+          <option value="non-binaire">Non-binaire</option>
+      </select>
+      <p>NATIONNALITÉ : <input type="text" name="nationnalite"></p>
+      <input type="submit" value="CRÉER" name="creer">
+</form>
+{% endif %}
+<p>{{ message }}</p>
 </body>
 </html>

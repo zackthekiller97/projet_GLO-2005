@@ -10,7 +10,7 @@
     <a href="rechercher">RECHERCHER</a>
     <a href="monclassement">MON CLASSEMENT</a>
     {% if profile["role"] == "admin" %} <!-- seuls les admins ont accès à cette page -->
-        <a href="ajouter">AJOUTER</a>
+        <a href="ajouter?type=film">AJOUTER</a>
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
