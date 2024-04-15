@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Rater</title>
+    <link rel="stylesheet" type="text/css" href="../static/ajouter.css">
     <script type="text/javascript" src="../static/ajouter.js"></script>
 </head>
 <body onload="SupprimerContenu()">
@@ -15,8 +16,8 @@
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
-<p>AJOUTER</p>
-  <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
+<h1>Ajouter un élément au site</h1>
+  <div id="options"> <!-- pour naviguer entre les 2 options de la page -->
       <a href="ajouter?type=film">FILM</a>
       <a href="ajouter?type=serie">SERIE</a>
       <a href="ajouter?type=genre">GENRE</a>

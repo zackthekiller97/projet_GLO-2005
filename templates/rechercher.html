@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Rater</title>
+    <link rel="stylesheet" type="text/css" href="../static/recherche.css">
     <script type="text/javascript" src="../static/infoFilm.js"></script>
 </head>
 <body onLoad="ajouterHref()">  <!-- appelle la fonction du fichier js pour rajouter les liens vers infoFilm à tous les films du tableau -->
@@ -15,8 +16,8 @@
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
-  <p>RECHERCHER</p>
-    <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
+  <h1 id="titre">Trouver un film ou une série</h1>
+    <div id="options"> <!-- pour naviguer entre les 2 options de la page -->
       <a href="rechercher">FILMS</a>
       <a href="rechercherSeries">SERIES</a>
   </div>

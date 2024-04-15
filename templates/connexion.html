@@ -7,15 +7,20 @@
     <script type="text/javascript" src="../static/connexion.js"></script>
 </head>
 <body onload="SupprimerContenu()"> <!-- on appelle la fonction du fichier js pour supprimer le contenu des inputs -->
-    <p>CONNEXION</p>
-    <form action="login" method="post">
-        <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
-        MOT DE PASSE : <input type="password" name="password"></p><br>
-        {% if message %}
-        <p>{{ message }}</p> <!-- c'est ici qu'on affiche le message d'erreur si la connexion est erronée -->
-        {% endif %}
-        <input type="submit" value="CONNEXION" name="connexion">
-    </form>
-    <a href = "inscription">AUCUN COMPTE ? CLIQUEZ ICI</a> <!-- lien vers la page d'inscription -->
+    <div id="contenu">
+        <h1 id="titre">Bienvenue sur Movie Rater!</h1>
+        <div id="contenu-de-la-page">
+            <p>CONNEXION</p>
+            <form action="login" method="post">
+                <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
+                MOT DE PASSE : <input type="password" name="password"></p><br>
+                {% if message %}
+                <p>{{ message }}</p> <!-- c'est ici qu'on affiche le message d'erreur si la connexion est erronée -->
+                {% endif %}
+                <input type="submit" value="CONNEXION" name="connexion">
+            </form>
+            <a href = "inscription">AUCUN COMPTE ? CLIQUEZ ICI</a> <!-- lien vers la page d'inscription -->
+        </div>
+    </div>
 </body>
 </html>

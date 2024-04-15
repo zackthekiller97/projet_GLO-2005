@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Rater</title>
+    <link rel="stylesheet" type="text/css" href="../static/accueil.css">
     <script type="text/javascript" src="../static/infoFilm.js"></script>
 </head>
 <body onload="ajouterHref()"> <!-- appelle la fonction du fichier js pour rajouter les liens vers infoFilm à tous les films du tableau -->
@@ -15,12 +16,12 @@
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
-  <p>CLASSEMENT GÉNÉRAL</p>
-  <div name="options"> <!-- pour naviguer entre les 2 options de la page -->
+  <h1 id="titre">CLASSEMENT GÉNÉRAL</h1>
+  <div id="options"> <!-- pour naviguer entre les 2 options de la page -->
       <a href="accueil">FILMS</a>
       <a href="accueilSeries">SERIES</a>
   </div>
-  <div name="filtrer">
+  <div id="filtrer">
       <form action="filtrer" method="post">
       <p>FILTRER PAR :</p>
       <p>NOM FILM : <input type="text" name="nomfilm"></p>
@@ -46,8 +47,8 @@
       <input type="submit" value="FILTRER" name="filtrer">
       </form>
   </div>
-  <div name="films">
-     <table name="table">
+  <div id="films">
+     <table id="table">
          <thead>
             <tr>
                 <th>Position</th>

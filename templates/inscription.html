@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Rater</title>
-    <link rel="stylesheet" type="text/css" href="../static/connexion.css">
+    <link rel="stylesheet" type="text/css" href="../static/inscription.css">
     <script type="text/javascript" src="../static/connexion.js"></script>
 </head>
 <body>
-  <p>INSCRIPTION</p>
-    <form action="inscription" method="post">
-        <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
-        MOT DE PASSE : <input type="password" name="password"></p><br>
-        {% if message %}
-        <p>{{ message }}</p> <!-- on affiche un message d'erreur si le nom d'utilisateur existe déjà -->
-        {% endif %}
-        <input type="submit" value="INSCRIPTION" name="inscription">
-    </form>
-    <a href = "connexion">DÉJÀ UN COMPTE ? CLIQUEZ ICI</a> <!-- lien vers la page de connexion -->
+<div id="contenu">
+  <h1 id="titre">Inscription</h1>
+<p> Veulliez entrer un nom d'utilisateur et un mot de passe. Ces informations vous seront demandées lors de la connection au site.</p>
+        <div id="contenu-de-la-page">
+        <form action="inscription" method="post">
+            <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
+            MOT DE PASSE : <input type="password" name="password"></p><br>
+            {% if message %}
+            <p>{{ message }}</p> <!-- on affiche un message d'erreur si le nom d'utilisateur existe déjà -->
+            {% endif %}
+            <input type="submit" value="INSCRIPTION" name="inscription">
+        </form>
+        <a href = "connexion">DÉJÀ UN COMPTE ? CLIQUEZ ICI</a> <!-- lien vers la page de connexion -->
+        </div>
+</div>
 </body>
 </html>
