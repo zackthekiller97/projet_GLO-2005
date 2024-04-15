@@ -35,7 +35,6 @@
       </select>
       <label for="sgenres">SOUS-GENRE :</label>
       <select name="sgenres" id="sgenres">
-          <option value="">Tous</option>
           {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
             <option value={{genre}}>{{genre}}</option>
           {% endfor %}
@@ -46,10 +45,9 @@
 </form>
 {% elif typeAjout == "serie" %}
 <form action="creer" method="post">
-      <p>NOM FILM : <input type="text" name="nomfilm"></p>
+      <p>NOM SÉRIE : <input type="text" name="nomfilm"></p>
       <label for="genres">GENRE :</label>
       <select name="genres" id="genresS">
-          <option value="">Tous</option>
           {% for genre in genres %} <!-- tous les genres de la db genre sont affichés comme option dans la liste y compris l'option "tous" -->
             <option value={{genre}}>{{genre}}</option>
           {% endfor %}
@@ -75,7 +73,7 @@
 <form action="creer" method="post">
       <p>PRENOM : <input type="text" name="prenom"></p>
       <p>NOM : <input type="text" name="nom"></p>
-      <p>DATE DE NAISSANCE : <input type="text" name="ddn"></p>
+      <p>DATE DE NAISSANCE : <input type="text" name="ddn" placeholder="format AAAA-MM-JJ"></p>
       <label for="sexe">SEXE :</label>
       <select name="sexe" id="sexe">
           <option value="masculin">Masculin</option>
