@@ -70,6 +70,10 @@ def connexion():
     cmd='SELECT motDePasse FROM utilisateurs WHERE nomUtilisateur = '+username+';'
     passeVrai = database.verifyConnexion(cmd)
     print(hash)
+
+    if (passeVrai==None):
+        return render_template('connexion.html', message="NOM D'UTILISATEUR OU MOT DE PASSE INVALIDE")
+
     motdepasse = passeVrai[0].replace("b'", "")
     motdepasse = motdepasse.replace("'", "")
     motdepasse = motdepasse.encode('utf-8')
@@ -282,19 +286,31 @@ def infoFilmSerie():
 def vote():
     message = ""
     note = request.form.get('votefilm')
-    note2 = float(note)
-    if note2 < 0 or note2 > 10: #on vérifie que la note soit un chiffre valide entre 0 et 10
+    try:
+        note2 = float(note)
+        if note2 < 0 or note2 > 10: #on vérifie que la note soit un chiffre valide entre 0 et 10
+            table = fetchTableDataFilm(tableType, filmChoisi) #on va chercher les infos du film choisi
+            voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
+            commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
+            message = "Note invalide, veuillez entrer un chiffre (à virgule ou non) entre 0 et 10" #on indique à l'utilisateur que sa note est invalide
+            return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message)
+        commentaire = request.form.get('commentairefilm')
+        if commentaire is None:
+            commentaire = ""
+        database.voter_film_serie(tableType, ProfileUtilisateur["username"], note, commentaire, filmChoisi) #on entre le vote de l'utilisateur dans la db
+
+        message = "Vote enregistré avec succès !"
+        table = fetchTableDataFilm(tableType, filmChoisi)
+        voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"])
+        commentaires = fetchCommentaires(tableType, filmChoisi)
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message)
+
+    except ValueError:
         table = fetchTableDataFilm(tableType, filmChoisi) #on va chercher les infos du film choisi
         voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
         commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
-        message = "Note invalide, veuillez entrer un chiffre (à virgule ou non) entre 0 et 10" #on indique à l'utilisateur que sa note est invalide
-        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message)
-    commentaire = request.form.get('commentairefilm')
-    database.voter_film_serie(tableType, ProfileUtilisateur["username"], note, commentaire, filmChoisi) #on entre le vote de l'utilisateur dans la db
-    table = fetchTableDataFilm(tableType, filmChoisi) #on va chercher les infos du film choisi
-    voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
-    commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
-    return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires, message=message)
+        message="Entrer une note valide"
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires, message=message)
 
 @app.route("/ajouter", methods={'GET', 'POST'})
 def ajouterPage():

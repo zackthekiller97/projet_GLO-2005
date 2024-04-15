@@ -41,10 +41,12 @@
       </select>
       <p>ANNEE : <input type="text" name="annee"></p>
       <p>ACTEUR : <input type="text" name="acteur"></p>
-      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes"></p>
-      <p>NOTE MINIMALE : <input type="text" name="note" value="0"></p> <!-- on met la valeur par défaut 0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
-          <p>SAISON : <input type="text" name="saison" value="0.0"></p> <!-- on met la valeur par défaut 0.0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
-      <input type="submit" value="FILTRER" name="filtrer">
+      <p>NOMBRE DE VOTES MINIMAL : <input type="text" name="nbvotes" value="0"></p>
+      <p>NOTE MINIMALE : <input type="text" name="note" value="0.0"></p> <!-- on met la valeur par défaut 0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
+          {% if type == "series"%}
+              <p>SAISON : <input type="text" name="saison"></p> <!-- on met la valeur par défaut 0.0 pour indiquer à l'utilisateur que cette case doit avoir un chiffre -->
+          {% endif %}
+          <input type="submit" value="FILTRER" name="filtrer">
       </form>
   </div>
   <div name="films">
