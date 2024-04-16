@@ -3,7 +3,6 @@ import os
 import pymysql
 from dotenv import load_dotenv
 
-from sql_utils import run_sql_file
 
 
 class Database:
