@@ -1,6 +1,13 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, flash, redirect, url_for
 import bcrypt
+import os
+from werkzeug.utils import secure_filename
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
 from database import Database
+
+ALLOWED_EXTENSIONS = set(['jpg'])
+
 
 app = Flask(__name__)
 ProfileUtilisateur = {} #informations sur l'utilisateur connecté
@@ -8,8 +15,12 @@ connexionApprouvee = False #indique si l'utilisateur s'est connecté avant d'ouv
 tableType = "films" #type de table à choisir lors des requêtes (films ou séries)
 filmChoisi = "" #film choisi lors de l'ouverture de la page infoFilm
 typeAjout = "film" #type d'élément à créer
-
+app.config['SECRET_KEY'] = 'supersecretkey'
 database = Database()
+
+class UploadFileForm(FlaskForm):
+    file = FileField("File")
+    submit = SubmitField("Upload File")
 
 #fonction qui permet d'aller chercher les données des Films ou Séries
 def fetchTableData(table, nomfilm, genre, sousgenre, annee, acteur, nbvote, note, saison): #
@@ -53,6 +64,7 @@ def fetchCommentaires(table, nomfilm):
         "entries": database.get_comments_movieserie(table, nomfilm)
     }
     return table_dict
+
 
 
 #route qui affiche la page de connexion du site
@@ -268,7 +280,7 @@ def rechercherFilmSerie():
         return render_template('rechercher.html', table=table, type=tableType, profile=ProfileUtilisateur)
 
 #route permettant d'afficher les infos d'un film ou d'une série
-@app.route("/infofilm", methods={'GET', 'POST'})
+@app.route("/infofilm", methods={'GET'})
 def infoFilmSerie():
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
@@ -276,10 +288,11 @@ def infoFilmSerie():
         nom = request.args.get('nom')
         global filmChoisi
         filmChoisi = nom
+        form = UploadFileForm()
         table = fetchTableDataFilm(tableType, nom) #impossible qu'il y ait d'erreur ici, le lien contient forcément l'id du film via son paramètre
         voteUser = fetchUserVote(tableType, nom, ProfileUtilisateur["username"]) #on va chercher le vote de l'utilisateur, s'il y en a aucun, on ne retourne rien
         commentaires = fetchCommentaires(tableType, nom) #on va chercher les commentaires du films, si aucun on ne retourne rien
-        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires)
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, form=form)
 
 #route permettant de voter un film ou une série
 @app.route("/vote", methods={'POST'})
@@ -293,7 +306,8 @@ def vote():
             voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
             commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
             message = "Note invalide, veuillez entrer un chiffre (à virgule ou non) entre 0 et 10" #on indique à l'utilisateur que sa note est invalide
-            return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message)
+            form = UploadFileForm()
+            return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message, form=form)
         commentaire = request.form.get('commentairefilm')
         if commentaire is None:
             commentaire = ""
@@ -303,14 +317,16 @@ def vote():
         table = fetchTableDataFilm(tableType, filmChoisi)
         voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"])
         commentaires = fetchCommentaires(tableType, filmChoisi)
-        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message)
+        form = UploadFileForm()
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser, commentaires=commentaires, message=message, form=form)
 
     except ValueError:
         table = fetchTableDataFilm(tableType, filmChoisi) #on va chercher les infos du film choisi
         voteUser = fetchUserVote(tableType, filmChoisi, ProfileUtilisateur["username"]) #on va chercher le vote et le commentaire de l'utilisateur
         commentaires = fetchCommentaires(tableType, filmChoisi) #on va chercher les commentaires du film ou de la série
         message="Entrer une note valide"
-        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires, message=message)
+        form = UploadFileForm()
+        return render_template('infofilm.html', table=table, type=tableType, profile=ProfileUtilisateur, voteUser=voteUser,commentaires=commentaires, message=message, form=form)
 
 @app.route("/ajouter", methods={'GET', 'POST'})
 def ajouterPage():
@@ -382,6 +398,25 @@ def ajouter():
             except:
                 message = "Valeurs incorrectes, veuillez recommencer"
         return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message=message, genres=genres)
+
+@app.route("/upload", methods = ['POST', 'GET'])
+def upload_file():
+    global tableType
+    if connexionApprouvee==True:
+        formi = UploadFileForm()
+        if formi.validate_on_submit():
+            file = formi.file.data
+            if tableType == "films":
+                app.config['UPLOAD_FOLDER'] = "./static/images/films"
+            else:
+                app.config['UPLOAD_FOLDER'] = "./static/images/series"
+            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
+        tableType = "films"
+        genres = database.select_genres()
+        table = fetchTableData(tableType, "", "", "", "", "", "0", "0.0","")  # on va chercher les infos des films sans filtre spécifique
+        return render_template('accueil.html', profile=ProfileUtilisateur, genres=genres, table=table, type=tableType)
+    else:
+        return render_template('connexion.html')
 
 if __name__ == "__main__":
     app.run()

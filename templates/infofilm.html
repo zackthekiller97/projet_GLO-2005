@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Movie Rater</title>
     <link rel="stylesheet" type="text/css" href="../static/infofilm.css">
+    <script type="text/javascript" src="../static/image.js"></script>
 </head>
-<body>
+<body onLoad="setimgsrc()">
 <nav> <!-- onglet de navigation avec les autres pages html -->
     <a href="accueil">ACCUEIL</a>
     <a href="rechercher">RECHERCHER</a>
@@ -15,6 +16,17 @@
     {% endif %}
     <a href="logout">LOGOUT</a>
 </nav>
+    <p hidden id="type">{{type}}</p>
+    <p hidden id="id">{{table.entries[0][0]}}</p>
+    <img src="" height="150px" width="100px" id="image">
+    {% if profile["role"] == "admin" %}
+        <form enctype="multipart/form-data" action="upload", method="post">
+            <p>{{table.entries[0][0]}}</p>
+            {{form.hidden_tag()}}
+            {{form.file()}}
+            {{form.submit()}}
+        </form>
+    {% endif %}
     <h1 id="titre">{{table.entries[0][1]}}</h1>
     {% if type == "series"  %}
     <p>SAISON : {{table.entries[0][9]}}</p> <!-- on rajoute l'option saison si c'est une série -->

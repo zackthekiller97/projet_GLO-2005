@@ -6,14 +6,14 @@ SELECT nomSerie, annee, genre, sousGenre, acteurs, saison, noteGlobale FROM seri
 DELIMITER //
 CREATE PROCEDURE filtrerFilms (IN nomFilm2 varchar(100), IN nomGenre varchar(50), IN nomSousGenre varchar(50), IN annee2 varchar(6), IN acteur varchar(100),IN nbVoteMin integer, IN noteMin double)
 BEGIN
-SELECT * FROM films WHERE nomFilm LIKE nomFilm2 AND genre LIKE nomGenre AND sousGenre LIKE nomSousGenre AND annee LIKE annee2 AND acteurs LIKE acteur AND nbVotes >= nbVoteMin AND noteGlobale >= noteMin ORDER BY noteGlobale DESC;
+SELECT * FROM films WHERE nomFilm LIKE nomFilm2 AND genre LIKE nomGenre AND sousGenre LIKE nomSousGenre AND annee LIKE annee2 AND acteurs LIKE acteur AND nbVotes >= nbVoteMin AND noteGlobale >= noteMin ORDER BY noteGlobale DESC LIMIT 100;
 END //
 DELIMITER ;
 --procédure permettant de filtrer les séries en fonction de plusieurs critères :
 DELIMITER //
 CREATE PROCEDURE filtrerSeries (IN nomSerie2 varchar(100), IN nomGenre varchar(50), IN nomSousGenre varchar(50), IN annee2 varchar(6), IN acteur varchar(100), IN saison2 varchar(10),IN nbVoteMin integer, IN noteMin double)
 BEGIN
-SELECT * FROM series WHERE nomSerie LIKE nomSerie2 AND genre LIKE nomGenre AND sousGenre LIKE nomSousGenre AND annee LIKE annee2 AND acteurs LIKE acteur AND nbVotes >= nbVoteMin AND noteGlobale >= noteMin AND saison LIKE saison2 ORDER BY noteGlobale DESC;
+SELECT * FROM series WHERE nomSerie LIKE nomSerie2 AND genre LIKE nomGenre AND sousGenre LIKE nomSousGenre AND annee LIKE annee2 AND acteurs LIKE acteur AND nbVotes >= nbVoteMin AND noteGlobale >= noteMin AND saison LIKE saison2 ORDER BY noteGlobale DESC LIMIT 100;
 END //
 DELIMITER ;
 --procédure permettant de filtrer les films dun utilisateur spécifique en fonction de plusieurs critères :
@@ -70,10 +70,10 @@ CREATE PROCEDURE rajouterVoteFilm (IN nomUtilisateur varchar(50), IN idFilm2 int
 BEGIN
 DECLARE idActuelVoteFilm integer;
 SELECT max(id) FROM votesFilms INTO idActuelVoteFilm;
-INSERT INTO votesFilms VALUES (idActuelVoteFilm+1, nomUtilisateur, idFilm2, note);
-UPDATE films SET noteTotale = noteTotale + note WHERE idFilm = idFilm2;
+INSERT INTO votesFilms VALUES (idActuelVoteFilm+1, nomUtilisateur, idFilm2, ROUND(note,2));
+UPDATE films SET noteTotale = noteTotale + ROUND(note,2) WHERE idFilm = idFilm2;
 UPDATE films SET nbVotes = nbVotes + 1 WHERE idFilm = idFilm2;
-UPDATE films SET noteGlobale = noteTotale / nbVotes WHERE idFilm = idFilm2;
+UPDATE films SET noteGlobale = ROUND(noteTotale / nbVotes,2) WHERE idFilm = idFilm2;
 IF contenuCommentaire <> "" THEN
 	INSERT INTO commentairesFilms VALUES (idActuelVoteFilm+1, contenuCommentaire);
 END IF;
@@ -85,10 +85,10 @@ CREATE PROCEDURE rajouterVoteSerie (IN nomUtilisateur varchar(50), IN idSerie2 i
 BEGIN
 DECLARE idActuelVoteSerie integer;
 SELECT max(id) FROM votesSeries INTO idActuelVoteSerie;
-INSERT INTO votesSeries VALUES (idActuelVoteSerie+1, nomUtilisateur, idSerie2, note);
-UPDATE series SET noteTotale = (noteTotale + note) WHERE idSerie = idSerie2;
+INSERT INTO votesSeries VALUES (idActuelVoteSerie+1, nomUtilisateur, idSerie2, ROUND(note,2));
+UPDATE series SET noteTotale = (noteTotale + ROUND(note,2)) WHERE idSerie = idSerie2;
 UPDATE series SET nbVotes = nbVotes + 1 WHERE idSerie = idSerie2;
-UPDATE series SET noteGlobale = noteTotale / nbVotes WHERE idSerie = idSerie2;
+UPDATE series SET noteGlobale = ROUND(noteTotale / nbVotes,2) WHERE idSerie = idSerie2;
 IF contenuCommentaire <> "" THEN
 	INSERT INTO commentairesSeries VALUES (idActuelVoteSerie+1, contenuCommentaire);
 END IF;
