@@ -1,11 +1,12 @@
 body{
-    background-image: url("interface corrigée.png"), url("image background.png");
-    background-size: contain;
+    background-image: url("../images/interface corrigée.png"), url("../images/image background.png");
+    background-size: contain, cover;
     background-repeat: no-repeat, repeat;
     background-position: top center, center top;
     color: ghostwhite;
     margin: 0;
 }
+
 
 nav {
     background-color: rgba(0, 0, 0, 0.5); /*fond semi transparent */
@@ -27,7 +28,7 @@ nav a:hover {
     background-color: rgba(255, 255, 255, 0.2); /* Couleur de fond au survol */
 }
 
-h1{
+#titre{
     text-align: center;
     margin-top: 80px;
 }
@@ -43,10 +44,8 @@ h1{
 }
 
 
-#options a[href="ajouter?type=film"],
-#options a[href="ajouter?type=serie"],
-#options a[href="ajouter?type=genre"],
-#options a[href="ajouter?type=acteur"]{
+#options a[href="monclassement"],
+#options a[href="monclassementSeries"]{
     color: ghostwhite;
 }
 
@@ -54,56 +53,50 @@ h1{
     background-color: rgba(255, 255, 255, 0.45);
 }
 
-form {
-    max-width: 400px;
-    margin: 20px auto;
+#filtrerUser {
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+#filtrerUser form {
     padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
     border-radius: 8px;
     background-color: rgba(242, 242, 242, 0.15);
 }
 
-
-form p{
-    margin-bottom: 15px;
+#filtrerUser p{
+    margin: 10px;
     text-align: left;
-}
-
-form label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-form input[type="text"],
-form select {
-    width: 50%;
-    padding: 8px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-}
-
-.form-group {
     display: flex;
     align-items: center;
 }
 
-.form-group label {
+
+#filtrerUser label {
+    flex: 0 0 150px;
+}
+
+#filtrerUser select, #filtrer input[type="text"] {
     flex: 1;
-    margin-right: 10px;
-    text-align: right;
-    padding-right: 10px;
+    margin-left: 20px;
 }
 
-
-.form-group .genre-label {
-    position: absolute;
-    left: 0;
-    top: 2px;
+table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.form-group .sous-genre-label {
-    position: absolute;
-    left: 0;
-    top: 32px;
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
 }
 
 form input[type="submit"] {

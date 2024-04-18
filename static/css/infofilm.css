@@ -1,5 +1,5 @@
 body{
-    background-image: url("interface corrigée.png"), url("image background.png");
+    background-image: url("../images/interface corrigée.png"), url("../images/image background.png");
     background-size: cover;
     background-repeat: no-repeat, repeat;
     background-position: top center, center top;
