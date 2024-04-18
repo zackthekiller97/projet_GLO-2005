@@ -73,11 +73,13 @@ def fetchCommentaires(table, nomfilm):
 #route qui affiche la page de connexion du site
 @app.route("/")
 def main():
+    database = Database()
     return render_template('connexion.html')
 
 #route qui vérifie la connection de l'utilisateur
 @app.route("/login", methods={'POST'})
 def connexion():
+    database = Database()
     username = '"'+request.form.get('username')+'"'
     mdp = request.form.get('password')
     bytes = mdp.encode('utf-8')
@@ -109,6 +111,7 @@ def connexion():
 #route d'inscription d'un utilisateur
 @app.route("/inscription", methods={'POST'})
 def inscription():
+    database = Database()
     username = request.form.get('username')
     mdp = request.form.get('password')
     mdp = mdp.encode('utf-8')
@@ -135,16 +138,19 @@ def inscription():
 #route permettant d'afficher la page d'inscription
 @app.route("/inscription")
 def inscriptionpage():
+    database = Database()
     return render_template('inscription.html')
 
 #route permettant d'afficher la page de connexion
 @app.route("/connexion")
 def connexionpage():
+    database = Database()
     return render_template('connexion.html')
 
 #route permettant d'afficher la page d'accueil avec le classement des films
 @app.route("/accueil")
 def accueilPage():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -152,12 +158,13 @@ def accueilPage():
         tableType = "films"
         genres = database.select_genres() #on va chercher la liste des genres de la db genres pour le futur filtrage
         table = fetchTableData(tableType, "", "", "", "", "", "0", "0.0", "") #on va chercher les infos des films sans filtre spécifique
-        print(table)
+        table = fetchTableData(tableType, "", "", "", "", "", "0", "0.0", "") #on va chercher les infos des films sans filtre spécifique
         return render_template('accueil.html', genres=genres, profile=ProfileUtilisateur, table=table, type=tableType)
 
 #route permettant d'afficher la page d'accueil avec le classement des séries
 @app.route("/accueilSeries")
 def accueilSeries():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -170,6 +177,7 @@ def accueilSeries():
 #route permettant de filtrer des films ou des séries de la page d'accueil
 @app.route('/filtrer', methods={'POST'})
 def filtrerfilmsseries():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -193,6 +201,7 @@ def filtrerfilmsseries():
 #route permettant d'afficher le classement des films de l'utilisateur
 @app.route('/monclassement')
 def monclassementFilms():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -205,6 +214,7 @@ def monclassementFilms():
 #route permettant d'afficher le classement des séries de l'utilisateur
 @app.route('/monclassementSeries')
 def monclassementSeries():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -217,6 +227,7 @@ def monclassementSeries():
 #route permettant de filtrer les films/séries du classement de l'utilisateur
 @app.route('/filtrerUser', methods={'POST'})
 def filtrerfilmsseriesUser():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -240,6 +251,7 @@ def filtrerfilmsseriesUser():
 #route permettant à l'utilisateur de se déconnecter et de retourner à la page de connection
 @app.route('/logout')
 def logout():
+    database = Database()
     global connexionApprouvee
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
@@ -252,6 +264,7 @@ def logout():
 #route permettant d'afficher la page de recherche de films
 @app.route("/rechercher")
 def rechercher():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -263,6 +276,7 @@ def rechercher():
 #route permettant d'afficher la page de recherche de séries
 @app.route("/rechercherSeries")
 def rechercherSeries():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -274,6 +288,7 @@ def rechercherSeries():
 #route permettant de rechercher des films ou des séries
 @app.route("/rechercherFilmSerie", methods={'POST'})
 def rechercherFilmSerie():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -285,6 +300,7 @@ def rechercherFilmSerie():
 #route permettant d'afficher les infos d'un film ou d'une série
 @app.route("/infofilm", methods={'GET'})
 def infoFilmSerie():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -300,6 +316,7 @@ def infoFilmSerie():
 #route permettant de voter un film ou une série
 @app.route("/vote", methods={'POST'})
 def vote():
+    database = Database()
     message = ""
     note = request.form.get('votefilm')
     try:
@@ -333,6 +350,7 @@ def vote():
 
 @app.route("/ajouter", methods={'GET', 'POST'})
 def ajouterPage():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -340,11 +358,11 @@ def ajouterPage():
         global typeAjout
         typeAjout = request.args.get('type')
         message = ""
-        print(typeAjout)
         return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message=message, genres=genres)
 
 @app.route("/creer", methods={'POST'})
 def ajouter():
+    database = Database()
     if (connexionApprouvee == False): #vérifie si l'utilisateur s'est connecté
         return render_template('connexion.html')
     else:
@@ -357,7 +375,6 @@ def ajouter():
                 sgenre = request.form.get('sgenres')
                 annee = request.form.get('annee')
                 acteurs = request.form.get('acteur')
-                print(nom,genre,sgenre,annee,acteurs)
                 if (nom == "" or genre == "" or sgenre == "" or annee == "" or acteurs == ""):
                     return render_template('ajouter.html', profile=ProfileUtilisateur, typeAjout=typeAjout, message="Aucune case ne peut être vide", genres=genres)
                 database.ajouterFilm(nom,annee,genre,sgenre,acteurs)
@@ -404,6 +421,7 @@ def ajouter():
 
 @app.route("/upload", methods = ['POST', 'GET'])
 def upload_file():
+    database = Database()
     global tableType
     if connexionApprouvee==True:
         formi = UploadFileForm()
