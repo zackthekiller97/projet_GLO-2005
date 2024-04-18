@@ -107,7 +107,7 @@ CREATE PROCEDURE voirCommentairesNotesUtilisateursFilms (IN idFilm2 integer)
 BEGIN
 SELECT V.nomUtilisateur, V.note, C.contenu FROM votesFilms V, commentairesFilms C WHERE V.idFilm = idFilm2 AND V.id = C.id ;
 END //
-DELIMITER;
+DELIMITER ;
 --procédure permettant de voir les commentaires et notes des utilisateurs dune série en particulier :
 DELIMITER //
 CREATE PROCEDURE voirCommentairesNotesUtilisateursSeries (IN idSerie2 integer)

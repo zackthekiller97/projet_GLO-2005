@@ -52,9 +52,12 @@ def fetchTableDataFilm(table, nomfilm):
 
 #fonction qui permet d'aller chercher le vote et le commentaire de l'utilisateur connecté sur un film/série s'il y en a un
 def fetchUserVote(table, nomfilm, user):
+    commentaire = ""
+    if (database.verifieVoteUser(user, nomfilm, table)!=[]):
+        commentaire = database.get_comments_movieserieUser(table, (database.verifieVoteUser(user, nomfilm, table)[0][0]))
     table_dict = {
         "entries": database.verifieVoteUser(user, nomfilm, table),
-        "commentaire": database.get_comments_movieserieUser(table, (database.verifieVoteUser(user, nomfilm, table)[0][0] if database.verifieVoteUser(user, nomfilm, table)!=[] else ""))
+        "commentaire": commentaire
     }
     return table_dict
 
