@@ -1,14 +1,13 @@
 import os
 
 import pymysql
-from dotenv import load_dotenv
-
+import dotenv
 
 
 class Database:
     def __init__(self):
-        load_dotenv()
-        self.host = os.environ.get("HOST")
+        dotenv.load_dotenv()
+        self.host = "postgres://itwulspdtsbkyv:2404fe98277b42972b7e5032b8eab82582425cafcc9ebcb9f360c922958f65f5@ec2-44-213-151-75.compute-1.amazonaws.com:5432/d4nbssq327qc0h"
         self.port = int(os.environ.get("PORT"))
         self.database = os.environ.get("DATABASE")
         self.user = os.environ.get("USER")
