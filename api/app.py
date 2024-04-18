@@ -420,6 +420,3 @@ def upload_file():
         return render_template('accueil.html', profile=ProfileUtilisateur, genres=genres, table=table, type=tableType)
     else:
         return render_template('connexion.html')
-
-if __name__ == "__main__":
-    app.run()
