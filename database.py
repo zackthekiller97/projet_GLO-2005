@@ -29,23 +29,28 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def verifyConnexion(self, req):
+        self._open_sql_connection()
         self.cursor.execute(req)
         return self.cursor.fetchone()
 
     def addValuestoDb(self, req):
+        self._open_sql_connection()
         self.cursor.execute(req)
 
     def select_genres(self):
+        self._open_sql_connection()
         self.cursor.execute("SELECT * FROM genres")
         genres = [x[0] for x in self.cursor.fetchall()]
         return genres
 
     def get_table_columns(self, table):
+        self._open_sql_connection()
         self.cursor.execute(f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table}' AND TABLE_SCHEMA = '{self.database}' ORDER BY ORDINAL_POSITION;")
         res = [x[0] for x in self.cursor.fetchall()]
         return res
 
     def get_table_data(self, table, nomfilm,genre,sousgenre,annee,acteur,nbvote,note, saison):
+        self._open_sql_connection()
         if (table == "films") :
             req = f"CALL filtrerFilms('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', {nbvote}, {note})"
         else :
@@ -56,6 +61,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def get_table_data_user(self, table, nomfilm,genre,sousgenre,annee,acteur,nbvote,note, saison, username):
+        self._open_sql_connection()
         if (table == "films") :
             req = f"CALL filtrerFilmsUtilisateur('%{nomfilm}%', '%{genre}%', '%{sousgenre}%', '%{annee}%', '%{acteur}%', {nbvote}, {note}, {username})"
         else :
@@ -66,6 +72,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def get_table_data_research(self, table, nomfilm):
+        self._open_sql_connection()
         if (table == "films") :
             req = f"CALL rechercherFilms('%{nomfilm}%');"
         else :
@@ -76,6 +83,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def get_movieserie_data(self, table, id):
+        self._open_sql_connection()
         if (table == "films"):
             req = f"SELECT * FROM films WHERE idFilm = '{id}';"
         else :
@@ -85,6 +93,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def verifieVoteUser(self, user, id, table):
+        self._open_sql_connection()
         if (table == "films"):
             req = f"SELECT * FROM votesFilms WHERE nomUtilisateur = {user} AND idFilm = '{id}';"
         else:
@@ -94,6 +103,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def get_comments_movieserieUser(self, table, id):
+        self._open_sql_connection()
         if (table == "films"):
             req = f"SELECT contenu FROM commentairesFilms WHERE id = '{id}';"
         else:
@@ -103,6 +113,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def get_comments_movieserie(self, table, id):
+        self._open_sql_connection()
         if (table=="films"):
             req = f"CALL voirCommentairesNotesUtilisateursFilms('{id}');"
         else:
@@ -112,6 +123,7 @@ class Database:
         return [list(x) for x in self.cursor.fetchall()]
 
     def voter_film_serie(self, table, user, note, commentaire, film):
+        self._open_sql_connection()
         if (table=="films"):
             req = f"CALL rajouterVoteFilm({user},'{film}','{note}','{commentaire}');"
         else:
@@ -120,13 +132,17 @@ class Database:
         self.cursor.execute(req)
 
     def ajouterFilm(self, nom, annee, genre, sousgenre, acteurs):
+        self._open_sql_connection()
         self.cursor.execute(f'CALL creerFilm("{nom}", "{annee}", "{genre}", "{sousgenre}", "{acteurs}")')
 
     def ajouterSerie(self, nom, annee, genre, sousgenre, acteurs, saison):
+        self._open_sql_connection()
         self.cursor.execute(f'CALL creerSerie("{nom}", "{annee}", "{genre}", "{sousgenre}", "{acteurs}", "{saison}")')
 
     def ajouterGenre(self, nom):
+        self._open_sql_connection()
         self.cursor.execute(f'CALL creerGenre("{nom}")')
 
     def ajouterActeur(self, prenom, nom, ddn, sexe, nationnalite):
+        self._open_sql_connection()
         self.cursor.execute(f'CALL creerActeur("{prenom}", "{nom}", "{ddn}", "{sexe}", "{nationnalite}")')
