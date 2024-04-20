@@ -111,6 +111,9 @@ def connexion():
 def inscription():
     username = request.form.get('username')
     mdp = request.form.get('password')
+    mdpconf = request.form.get('passwordconf')
+    if (mdp != mdpconf):
+        return render_template('inscription.html', message="LES MOTS DE PASSES NE SONT PAS IDENTIQUES")
     mdp = mdp.encode('utf-8')
     salt = bcrypt.gensalt(rounds=12)
     mdp = bcrypt.hashpw(mdp, salt)

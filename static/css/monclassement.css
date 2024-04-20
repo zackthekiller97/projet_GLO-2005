@@ -7,6 +7,13 @@ body{
     margin: 0;
 }
 
+a:visited {
+  color: blue;
+}
+
+nav a:visited {
+  color: ghostwhite;
+}
 
 nav {
     background-color: rgba(0, 0, 0, 0.5); /*fond semi transparent */

@@ -14,6 +14,7 @@
         <form action="inscription" method="post">
             <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
             MOT DE PASSE : <input type="password" name="password"></p><br>
+            CONFIRMER LE MOT DE PASSE : <input type="password" name="passwordconf"></p><br>
             {% if message %}
             <p>{{ message }}</p> <!-- on affiche un message d'erreur si le nom d'utilisateur existe déjà -->
             {% endif %}

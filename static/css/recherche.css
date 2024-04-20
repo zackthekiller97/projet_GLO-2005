@@ -1,12 +1,23 @@
 body{
     background-image: url("../images/interface corrigée.png"), url("../images/image background.png");
-    background-size: auto, cover;
+    background-size: 100% 100%, cover;
     background-repeat: no-repeat, repeat;
     background-position: top center, center top;
     color: ghostwhite;
     margin: 0;
 }
 
+html{
+    height: 60%
+}
+
+a:visited {
+  color: blue;
+}
+
+nav a:visited {
+  color: ghostwhite;
+}
 
 nav {
     background-color: rgba(0, 0, 0, 0.5); /*fond semi transparent */

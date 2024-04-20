@@ -28,6 +28,14 @@ nav a:hover {
     background-color: rgba(255, 255, 255, 0.2); /* Couleur de fond au survol */
 }
 
+a:visited {
+  color: blue;
+}
+
+nav a:visited {
+  color: ghostwhite;
+}
+
 #titre{
     text-align: center;
     margin-top: 80px;

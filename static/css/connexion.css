@@ -1,7 +1,16 @@
 body{
-    background-image: url("../images/interface corrigée.png");
-    background-size: cover;
+    background-image: url("../images/interface corrigée.png"), url("../images/image background.png");
+    background-size: 100% 100%, 100% 100%;
     color: ghostwhite;
+    background-repeat: no-repeat, repeat;
+}
+
+html{
+    height: 70%
+}
+
+a:visited {
+  color: ghostwhite;
 }
 
 p{
