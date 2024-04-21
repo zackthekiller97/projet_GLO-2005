@@ -37,8 +37,9 @@
     <p>ACTEURS : {{table.entries[0][5]}}</p>
     {% if voteUser.entries == [] %} <!-- si le user n'a pas encore voté au film, on affiche un form -->
         <form action="vote" method="post">
-            <p>VOTE : <input type="text" name="votefilm" placeholder="Entrez un chiffre (à virgule ou non) entre 0 et 10"></p>
-            <p>COMMENTAIRE : <textarea name="commentairefilm" placeholder="Entrez un commentaire (facultatif)" rows="4" cols="50"></textarea></p>
+            <p class="formtext">VOTE : </p><input type="text" name="votefilm" placeholder="Entrez un chiffre (à virgule ou non) entre 0 et 10">
+            <p id="commentaire">COMMENTAIRE : </p>
+            <textarea name="commentairefilm" placeholder="Entrez un commentaire (facultatif)" rows="4" cols="50" id="commentairebox"></textarea>
             <input type="submit" value="VOTER" name="voter">
         </form>
         <p>{{message}}</p> <!-- message d'erreur qui est affiché ici si la note n'est pas un chiffre entre 0 et 10 -->

@@ -12,9 +12,10 @@
 <p> Veulliez entrer un nom d'utilisateur et un mot de passe. Ces informations vous seront demandées lors de la connection au site.</p>
         <div id="contenu-de-la-page">
         <form action="inscription" method="post">
-            <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
-            MOT DE PASSE : <input type="password" name="password"></p><br>
-            CONFIRMER LE MOT DE PASSE : <input type="password" name="passwordconf"></p><br>
+            <p>NOM D'UTILISATEUR : <input type="text" name="username"></p>
+            <p>MOT DE PASSE : <input type="password" name="password"></p>
+            <p>CONFIRMER LE MOT DE PASSE : <input type="password" name="passwordconf"></p>
+            <br>
             {% if message %}
             <p>{{ message }}</p> <!-- on affiche un message d'erreur si le nom d'utilisateur existe déjà -->
             {% endif %}

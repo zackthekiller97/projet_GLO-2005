@@ -14,8 +14,11 @@
             <p>Movie Rater est un site vous permettant de connaitre les meilleurs films et séries du moment! Ce site vous permet de noter des films et séries télévisées. Vous pouvez laisser des commentaires à vos films et séries préférés et conserver un classement de vos divertissements favoris.</p>
             <p>CONNEXION</p>
             <form action="login" method="post">
-                <p>NOM D'UTILISATEUR : <input type="text" name="username"><br>
-                MOT DE PASSE : <input type="password" name="password"></p><br>
+                <p>NOM D'UTILISATEUR : </p>
+                <input type="text" name="username">
+                <p>MOT DE PASSE : </p>
+                <input type="password" name="password">
+                <br>
                 {% if message %}
                 <p>{{ message }}</p> <!-- c'est ici qu'on affiche le message d'erreur si la connexion est erronée -->
                 {% endif %}

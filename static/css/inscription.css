@@ -3,15 +3,17 @@ body{
     background-size: 100% 100%, 100% 100%;
     color: ghostwhite;
     background-repeat: no-repeat, repeat;
+    font-size: 1em;
 }
 
 html{
-    height: 70%
+    height: 40%
 }
 
 p{
     font-family: "Times New Roman";
     color: ghostwhite;
+    font-size: 1em;
 }
 
 #contenu{
@@ -40,6 +42,18 @@ a:visited {
 
 a {
   color: ghostwhite;
+}
+
+form {
+    border-radius: 4px;
+    border-style: solid;
+    border-color: ghostwhite;
+}
+
+form input {
+    font-size: 1em;
+    width: 300px;
+    height: 50px;
 }
 
 form input[type="submit"] {
