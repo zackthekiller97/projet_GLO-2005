@@ -13,6 +13,10 @@ a:visited {
   color: ghostwhite;
 }
 
+a {
+  color: ghostwhite;
+}
+
 p{
     font-family: "Times New Roman";
     color: ghostwhite;
@@ -52,3 +56,5 @@ form input[type="submit"] {
 form input[type="submit"]:hover {
     background-color: #9f3b3b;
 }
+
+

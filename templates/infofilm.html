@@ -38,7 +38,7 @@
     {% if voteUser.entries == [] %} <!-- si le user n'a pas encore voté au film, on affiche un form -->
         <form action="vote" method="post">
             <p>VOTE : <input type="text" name="votefilm" placeholder="Entrez un chiffre (à virgule ou non) entre 0 et 10"></p>
-            <p>COMMENTAIRE : <input type="text" name="commentairefilm" placeholder="Entrez un commentaire (facultatif)"></p>
+            <p>COMMENTAIRE : <textarea name="commentairefilm" placeholder="Entrez un commentaire (facultatif)" rows="4" cols="50"></textarea></p>
             <input type="submit" value="VOTER" name="voter">
         </form>
         <p>{{message}}</p> <!-- message d'erreur qui est affiché ici si la note n'est pas un chiffre entre 0 et 10 -->

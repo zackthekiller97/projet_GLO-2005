@@ -151,9 +151,9 @@ class Database:
     def voter_film_serie(self, table, user, note, commentaire, film):
         self._open_sql_connection()
         if (table=="films"):
-            req = f"CALL rajouterVoteFilm({user},'{film}','{note}','{commentaire}');"
+            req = f'CALL rajouterVoteFilm({user},"{film}","{note}","{commentaire}");'
         else:
-            req = f"CALL rajouterVoteSerie({user},'{film}','{note}','{commentaire}');"
+            req = f'CALL rajouterVoteSerie({user},"{film}","{note}","{commentaire}");'
 
         self.cursor.execute(req)
         self.cursor.close()
